@@ -8,6 +8,7 @@ export const customTheme = extendTheme({
     },
     dark: {
       800: '#15121E',
+      900: '#12101B',
     },
     yellow: {
       500: '#FFA30C',
@@ -15,6 +16,12 @@ export const customTheme = extendTheme({
     blue: {
       800: '#2017b6',
     },
+    purple: {
+      200: '#CC77FD',
+    },
+  },
+  sizes: {
+    17: 72,
   },
   fonts: {
     light: 'Sora_300Light',
