@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { Icon, Image, Text, useTheme, View, VStack } from 'native-base';
-import { Header } from '../components/Header';
-
 import { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
 import { data } from '../../data.json';
 import { Button } from '../components/Button';
+import { Header } from '../components/Header';
 import { MovieCardProps } from '../components/MovieCard';
 
 interface RouteParams {
@@ -35,18 +35,14 @@ export function MovieInfo() {
       alignItems="center"
       justifyContent="flex-end"
       bgColor="dark.800"
-      position="relative"
     >
       <Header showBackButton />
 
       <Image
-        position="absolute"
-        height={height}
-        width={width}
         source={{ uri: movie.cover_url }}
         alt={movie.title || 'Movie cover'}
         resizeMode="cover"
-        blurRadius={5}
+        style={[StyleSheet.absoluteFill]}
       />
 
       <View
@@ -167,7 +163,6 @@ export function MovieInfo() {
           {movie.overview}
         </Text>
       </View>
-
       <Button mb={6} />
     </VStack>
   );
