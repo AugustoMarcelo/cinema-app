@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Icon, Image, Text, useTheme, View, VStack } from 'native-base';
 import { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
@@ -16,6 +16,7 @@ interface RouteParams {
 export function MovieInfo() {
   const [movie, setMovie] = useState<MovieCardProps>({} as MovieCardProps);
 
+  const { navigate } = useNavigation();
   const { sizes } = useTheme();
   const route = useRoute();
   const { id } = route.params as RouteParams;
@@ -163,7 +164,7 @@ export function MovieInfo() {
           {movie.overview}
         </Text>
       </View>
-      <Button mb={6} />
+      <Button mb={6} handleClick={() => navigate('Select')} />
     </VStack>
   );
 }
