@@ -1,6 +1,4 @@
-import dayjs from 'dayjs';
-import ptBR from 'dayjs/locale/pt-br';
-import { FlatList, Pressable, Text, useTheme, View, VStack } from 'native-base';
+import { FlatList, Pressable, Text, View, VStack } from 'native-base';
 import { useState } from 'react';
 
 import { Button } from '../components/Button';
@@ -10,28 +8,16 @@ import Ellipsis4 from '../assets/ellipsis4.svg';
 // import Light from '../assets/light.svg';
 import Screen1 from '../assets/screen1.svg';
 import Screen2 from '../assets/screen2.svg';
-
-interface SelectDate {
-  day: string;
-  shortDay: string;
-  isSelected: boolean;
-}
-
-interface SelectTime {
-  time: string;
-  isSelected: boolean;
-}
-
-interface Seat {
-  status: 'free' | 'selected' | 'occuped';
-  number: number;
-}
-
-interface SeatsRow {
-  leftSeats: Seat[];
-  rowLetter: string;
-  rightSeats: Seat[];
-}
+import { Seat } from '../components/Seat';
+import { Subtitle } from '../components/Subtitle';
+import {
+  getInitializedDatesData,
+  getInitializedSeatsData,
+  getInitializedTimesData,
+  SeatsRow,
+  SelectDate,
+  SelectTime,
+} from '../utils';
 
 interface SelectedSeat {
   rowLetter: string;
@@ -39,137 +25,11 @@ interface SelectedSeat {
 }
 
 export function Select() {
-  const { colors } = useTheme();
-
-  const [dates, setDates] = useState<SelectDate[]>(
-    Array.from({ length: 10 }).map((_, index) => {
-      const date = new Date();
-      date.setDate(date.getDate() + index);
-      let isSelected = false;
-
-      if (dayjs().isSame(date, 'day')) {
-        isSelected = true;
-      }
-
-      return {
-        day: String(date.getDate()).padStart(2, '0'),
-        shortDay: dayjs(date).locale(ptBR).format('ddd'),
-        isSelected,
-      };
-    })
+  const [dates, setDates] = useState<SelectDate[]>(getInitializedDatesData());
+  const [times, setTimes] = useState<SelectTime[]>(getInitializedTimesData());
+  const [seatsRows, setSeatsRows] = useState<SeatsRow[]>(
+    getInitializedSeatsData()
   );
-
-  const [times, setTimes] = useState<SelectTime[]>(
-    Array.from({ length: 24 - new Date().getHours() }).map((_, index) => {
-      const currentHour = new Date().getHours();
-      const currentHourIncremented = currentHour + index;
-      let isSelected = false;
-
-      if (currentHour === currentHourIncremented) isSelected = true;
-
-      return {
-        time: `${String(currentHourIncremented).padStart(2, '0')}:00`,
-        isSelected,
-      };
-    })
-  );
-
-  const [seatsRows, setSeatsRows] = useState<SeatsRow[]>([
-    {
-      leftSeats: Array.from<Seat>({ length: 3 }).map((_, index) => ({
-        number: index + 1,
-        status: 'free',
-      })),
-      rowLetter: 'A',
-      rightSeats: Array.from<Seat>({ length: 3 }).map((_, index) => ({
-        number: index + 1 + 3,
-        status: 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: 'free',
-      })),
-      rowLetter: 'B',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: index + 1 + 4 <= 7 ? 'occuped' : 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: index + 1 < 4 ? 'free' : 'occuped',
-      })),
-      rowLetter: 'C',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: index + 1 + 4 === 7 ? 'occuped' : 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: index + 1 < 3 ? 'free' : 'occuped',
-      })),
-      rowLetter: 'D',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => {
-        const seats = {
-          6: 'selected',
-          8: 'occuped',
-        };
-        return {
-          number: index + 1 + 4,
-          status: seats[index + 1 + 4] ?? 'free',
-        };
-      }),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: [1, 4].includes(index + 1) ? 'occuped' : 'free',
-      })),
-      rowLetter: 'E',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: index + 1 + 4 === 7 ? 'occuped' : 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: 'occuped',
-      })),
-      rowLetter: 'F',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: index + 1 + 4 < 8 ? 'occuped' : 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1,
-        status: index + 1 > 1 ? 'occuped' : 'free',
-      })),
-      rowLetter: 'G',
-      rightSeats: Array.from<Seat>({ length: 4 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: index + 1 + 4 === 5 ? 'occuped' : 'free',
-      })),
-    },
-    {
-      leftSeats: Array.from<Seat>({ length: 3 }).map((_, index) => ({
-        number: index + 1,
-        status: index + 1 > 1 ? 'occuped' : 'free',
-      })),
-      rowLetter: 'H',
-      rightSeats: Array.from<Seat>({ length: 3 }).map((_, index) => ({
-        number: index + 1 + 4,
-        status: 'free',
-      })),
-    },
-  ]);
 
   const [selectedRowsLetter, setSelectedRowsLetter] = useState<string[]>(() => {
     const lettersSet = new Set<string>();
@@ -184,17 +44,6 @@ export function Select() {
     });
     return Array.from(lettersSet);
   });
-
-  const getBgColor = (state: 'free' | 'occuped' | 'selected') => {
-    switch (state) {
-      case 'selected':
-        return colors.blue[800];
-      case 'occuped':
-        return colors.blue[10];
-      default:
-        return 'transparent';
-    }
-  };
 
   function handleSelectDate(selected: SelectDate) {
     setDates((oldState) => {
@@ -380,11 +229,11 @@ export function Select() {
           <View position="absolute" left={10}>
             <Screen2 />
           </View>
-          <View position="absolute" left={-5}>
+          <View position="absolute" left={-6}>
             <Screen1 />
           </View>
 
-          <View alignItems="center" ml={4} mt={12}>
+          <View alignItems="center" mt={12}>
             {seatsRows.map((seatsRow) => (
               <View
                 alignSelf="stretch"
@@ -396,18 +245,9 @@ export function Select() {
               >
                 <View flexDir="row" ml="auto">
                   {seatsRow.leftSeats.map((seat, index) => (
-                    <Pressable
+                    <Seat
                       key={`${seatsRow.rowLetter}${seat.number}`}
-                      alignItems="center"
-                      justifyContent="center"
-                      rounded="full"
-                      width={6}
-                      height={6}
-                      borderWidth={1}
-                      borderColor={
-                        seat.status === 'selected' ? 'blue.800' : 'blue.10'
-                      }
-                      bgColor={getBgColor(seat.status)}
+                      data={seat}
                       mr={index + 1 === seatsRow.leftSeats.length ? 0 : 3}
                       onPress={() =>
                         handleSelectSeat({
@@ -415,18 +255,7 @@ export function Select() {
                           number: seat.number,
                         })
                       }
-                    >
-                      {seat.status === 'selected' && (
-                        <Text
-                          fontFamily="regular"
-                          fontSize="2xs"
-                          color="gray.20"
-                          lineHeight="xs"
-                        >
-                          {seat.number}
-                        </Text>
-                      )}
-                    </Pressable>
+                    />
                   ))}
                 </View>
                 <View
@@ -450,96 +279,25 @@ export function Select() {
                   </Text>
                 </View>
                 <View flexDir="row" mr="auto">
-                  {seatsRow.rightSeats.map((seat) => (
-                    <Pressable
+                  {seatsRow.rightSeats.map((seat, index) => (
+                    <Seat
                       key={`${seatsRow.rowLetter}${seat.number}`}
-                      rounded="full"
-                      width={6}
-                      height={6}
-                      borderWidth={1}
-                      alignItems="center"
-                      justifyContent="center"
-                      borderColor={
-                        seat.status === 'selected' ? 'blue.800' : 'blue.10'
-                      }
-                      bgColor={getBgColor(seat.status)}
-                      mr={3}
+                      data={seat}
+                      mr={index + 1 === seatsRow.leftSeats.length ? 0 : 3}
                       onPress={() =>
                         handleSelectSeat({
                           rowLetter: seatsRow.rowLetter,
                           number: seat.number,
                         })
                       }
-                    >
-                      {seat.status === 'selected' && (
-                        <Text
-                          fontFamily="regular"
-                          fontSize="2xs"
-                          color="gray.20"
-                          lineHeight="xs"
-                        >
-                          {seat.number}
-                        </Text>
-                      )}
-                    </Pressable>
+                    />
                   ))}
                 </View>
               </View>
             ))}
           </View>
 
-          {/* Subtitle */}
-          <View
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mx={6}
-            mt={3}
-          >
-            <View flexDir="row" alignItems="center">
-              <View
-                rounded="full"
-                width={4}
-                height={4}
-                borderWidth={1}
-                borderColor="blue.10"
-                mr={2}
-              />
-              <Text color="gray.20" fontFamily="regular" fontSize="sm">
-                Livre
-              </Text>
-            </View>
-
-            <View flexDir="row" alignItems="center">
-              <View
-                rounded="full"
-                bgColor="blue.10"
-                width={4}
-                height={4}
-                borderWidth={1}
-                borderColor="blue.10"
-                mr={2}
-              />
-              <Text color="gray.20" fontFamily="regular" fontSize="sm">
-                Ocupado
-              </Text>
-            </View>
-
-            <View flexDir="row" alignItems="center">
-              <View
-                rounded="full"
-                bgColor="blue.800"
-                width={4}
-                height={4}
-                borderWidth={1}
-                borderColor="blue.800"
-                mr={2}
-              />
-              <Text color="gray.20" fontFamily="regular" fontSize="sm">
-                Selecionado
-              </Text>
-            </View>
-          </View>
+          <Subtitle />
         </View>
 
         <Button />
