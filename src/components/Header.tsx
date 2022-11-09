@@ -1,13 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { HStack, Icon, Image, useTheme, View } from 'native-base';
+import { HStack, Icon, Image, Text, useTheme, View } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 
 interface Props {
   showBackButton?: boolean;
+  title?: string;
 }
 
-export function Header({ showBackButton }: Props) {
+export function Header({ showBackButton, title }: Props) {
   const { colors } = useTheme();
   const { goBack } = useNavigation();
 
@@ -33,6 +34,12 @@ export function Header({ showBackButton }: Props) {
         </TouchableOpacity>
       ) : (
         <Icon as={<Ionicons name="menu" />} color={colors.gray[50]} size={6} />
+      )}
+
+      {title && (
+        <Text ml="10" fontFamily="heading" color="gray.20" fontSize="lg">
+          {title}
+        </Text>
       )}
       <View flexDir="row" alignItems="center">
         <View mr={4} position="relative">
