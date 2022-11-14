@@ -1,5 +1,5 @@
 import { FlatList, View, VStack } from 'native-base';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { Button } from '../components/Button';
 import { Header } from '../components/Header';
@@ -31,7 +31,15 @@ interface RouteParams {
   movieId: string;
 }
 
+interface HandleSelectFlatListItemParams<T> {
+  selected: T;
+  index: number;
+}
+
 export function Select() {
+  const dateFlatListRef = useRef(null);
+  const timeFlatListRef = useRef(null);
+
   const { navigate } = useNavigation();
   const route = useRoute();
   const { movieId } = route.params as RouteParams;
@@ -56,7 +64,16 @@ export function Select() {
     return Array.from(lettersSet);
   });
 
-  function handleSelectDate(selected: SelectDate) {
+  function handleSelectDate({
+    selected,
+    index,
+  }: HandleSelectFlatListItemParams<SelectDate>) {
+    dateFlatListRef.current.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 0.56,
+    });
+
     setDates((oldState) => {
       return oldState.map((item) => {
         if (item.day === selected.day && !item.isSelected)
@@ -70,7 +87,16 @@ export function Select() {
     });
   }
 
-  function handleSelectTime(selected: SelectTime) {
+  function handleSelectTime({
+    selected,
+    index,
+  }: HandleSelectFlatListItemParams<SelectTime>) {
+    timeFlatListRef.current.scrollToIndex({
+      animated: true,
+      index,
+      viewPosition: 0.51,
+    });
+
     setTimes((oldState) => {
       return oldState.map((item) => {
         if (item.time === selected.time && !item.isSelected)
@@ -168,6 +194,7 @@ export function Select() {
         zIndex={100}
       >
         <FlatList
+          ref={dateFlatListRef}
           data={dates}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -177,12 +204,16 @@ export function Select() {
             mt: 10,
             pl: 6,
           }}
-          renderItem={({ item }) => (
-            <DatePicker data={item} onPress={() => handleSelectDate(item)} />
+          renderItem={({ item, index }) => (
+            <DatePicker
+              data={item}
+              onPress={() => handleSelectDate({ selected: item, index })}
+            />
           )}
         />
 
         <FlatList
+          ref={timeFlatListRef}
           data={times}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -192,8 +223,11 @@ export function Select() {
             my: 6,
             pl: 6,
           }}
-          renderItem={({ item }) => (
-            <TimePicker data={item} onPress={() => handleSelectTime(item)} />
+          renderItem={({ item, index }) => (
+            <TimePicker
+              data={item}
+              onPress={() => handleSelectTime({ selected: item, index })}
+            />
           )}
         />
 
