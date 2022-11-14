@@ -8,6 +8,7 @@ import { data } from '../../data.json';
 import { Button } from '../components/Button';
 import { Header } from '../components/Header';
 import { MovieCardProps } from '../components/MovieCard';
+import { TicketInfo } from '../components/TicketInfo';
 
 interface RouteParams {
   id: string;
@@ -96,60 +97,25 @@ export function MovieInfo() {
           alignItems="center"
           justifyContent="space-around"
         >
-          <View>
-            <Text
-              color="purple.100"
-              fontSize="xs"
-              fontFamily="regular"
-              textAlign="center"
-            >
-              Gênero
-            </Text>
-            <Text
-              color="gray.20"
-              fontSize="md"
-              fontFamily="heading"
-              textAlign="center"
-            >
-              Fantasia
-            </Text>
-          </View>
-          <View>
-            <Text
-              color="purple.100"
-              fontSize="xs"
-              fontFamily="regular"
-              textAlign="center"
-            >
-              Duração
-            </Text>
-            <Text
-              color="gray.20"
-              fontSize="md"
-              fontFamily="heading"
-              textAlign="center"
-            >
-              {movieHours}h{movieMinutes}m
-            </Text>
-          </View>
-          <View>
-            <Text
-              color="purple.100"
-              fontSize="xs"
-              fontFamily="regular"
-              textAlign="center"
-            >
-              IMBd
-            </Text>
-            <Text
-              color="gray.20"
-              fontSize="md"
-              fontFamily="heading"
-              textAlign="center"
-            >
-              4.9
-            </Text>
-          </View>
+          <TicketInfo.Container mt={0} mb={0}>
+            <TicketInfo.Block
+              screen="MovieInfo"
+              label="Gênero"
+              value="Fantasia"
+            />
+          </TicketInfo.Container>
+
+          <TicketInfo.Container mt={0} mb={0}>
+            <TicketInfo.Block
+              screen="MovieInfo"
+              label="Duração"
+              value={`${movieHours}h${movieMinutes}m`}
+            />
+          </TicketInfo.Container>
+
+          <TicketInfo.Container mt={0} mb={0}>
+            <TicketInfo.Block screen="MovieInfo" label="IMBd" value="4.9" />
+          </TicketInfo.Container>
         </View>
 
         <Text

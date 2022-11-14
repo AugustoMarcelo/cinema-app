@@ -23,9 +23,15 @@ function TicketInfoContainer({ children, ...rest }: TicketInfoContainerProps) {
 interface TicketInfoBlockProps extends StyledProps {
   label: string;
   value: string;
+  screen?: 'Ticket' | 'MovieInfo';
 }
 
-function TicketInfoBlock({ label, value, ...rest }: TicketInfoBlockProps) {
+function TicketInfoBlock({
+  label,
+  value,
+  screen = 'Ticket',
+  ...rest
+}: TicketInfoBlockProps) {
   return (
     <View {...rest}>
       <Text
@@ -38,7 +44,7 @@ function TicketInfoBlock({ label, value, ...rest }: TicketInfoBlockProps) {
       </Text>
       <Text
         color="gray.20"
-        fontSize="sm"
+        fontSize={screen === 'Ticket' ? 'sm' : 'md'}
         fontFamily="heading"
         textAlign="center"
       >
