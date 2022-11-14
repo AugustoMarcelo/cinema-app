@@ -1,4 +1,4 @@
-import { FlatList, Pressable, Text, View, VStack } from 'native-base';
+import { FlatList, Text, View, VStack } from 'native-base';
 import { useMemo, useState } from 'react';
 
 import { Button } from '../components/Button';
@@ -9,8 +9,10 @@ import Ellipsis4 from '../assets/ellipsis4.svg';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Screen1 from '../assets/screen1.svg';
 import Screen2 from '../assets/screen2.svg';
+import { DatePicker } from '../components/DatePicker';
 import { Seat } from '../components/Seat';
 import { Subtitle } from '../components/Subtitle';
+import { TimePicker } from '../components/TimePicker';
 import {
   getInitializedDatesData,
   getInitializedSeatsData,
@@ -176,41 +178,7 @@ export function Select() {
             pl: 6,
           }}
           renderItem={({ item }) => (
-            <Pressable
-              p={1}
-              mr={8}
-              rounded="3xl"
-              bgColor={item.isSelected ? 'blue.700' : 'blue.100'}
-              alignItems="center"
-              onPress={() => handleSelectDate(item)}
-            >
-              <View
-                bgColor={item.isSelected ? 'blue.900' : 'blue.200'}
-                width={item.isSelected ? 10 : 8}
-                height={item.isSelected ? 10 : 8}
-                mb={2}
-                rounded="full"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Text
-                  color="gray.20"
-                  fontFamily={item.isSelected ? 'heading' : 'regular'}
-                  fontSize={item.isSelected ? 'md' : 'sm'}
-                >
-                  {item.day}
-                </Text>
-              </View>
-              <Text
-                color="gray.20"
-                fontFamily={item.isSelected ? 'heading' : 'regular'}
-                fontSize={item.isSelected ? 'md' : 'xs'}
-                mb={item.isSelected ? 2 : 1}
-                textTransform="capitalize"
-              >
-                {item.shortDay}
-              </Text>
-            </Pressable>
+            <DatePicker data={item} onPress={() => handleSelectDate(item)} />
           )}
         />
 
@@ -225,27 +193,7 @@ export function Select() {
             pl: 6,
           }}
           renderItem={({ item }) => (
-            <Pressable
-              py={1}
-              px={3}
-              mr={2}
-              rounded="3xl"
-              bgColor={item.isSelected ? 'blue.700' : 'transparent'}
-              alignItems="center"
-              justifyContent="center"
-              borderWidth={2}
-              borderColor={item.isSelected ? 'blue.700' : 'blue.50'}
-              onPress={() => handleSelectTime(item)}
-            >
-              <Text
-                color="gray.20"
-                fontFamily={item.isSelected ? 'heading' : 'regular'}
-                fontSize="xs"
-                lineHeight="md"
-              >
-                {item.time}
-              </Text>
-            </Pressable>
+            <TimePicker data={item} onPress={() => handleSelectTime(item)} />
           )}
         />
 
