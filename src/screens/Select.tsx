@@ -1,4 +1,4 @@
-import { FlatList, Text, View, VStack } from 'native-base';
+import { FlatList, View, VStack } from 'native-base';
 import { useMemo, useState } from 'react';
 
 import { Button } from '../components/Button';
@@ -207,17 +207,10 @@ export function Select() {
 
           <View alignItems="center" mt={12}>
             {seatsRows.map((seatsRow) => (
-              <View
-                alignSelf="stretch"
-                key={seatsRow.rowLetter}
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-                mb={2}
-              >
-                <View flexDir="row" ml="auto">
+              <Seat.Root key={seatsRow.rowLetter}>
+                <Seat.Row ml="auto">
                   {seatsRow.leftSeats.map((seat, index) => (
-                    <Seat
+                    <Seat.Item
                       key={`${seatsRow.rowLetter}${seat.number}`}
                       data={seat}
                       mr={index + 1 === seatsRow.leftSeats.length ? 0 : 3}
@@ -229,30 +222,19 @@ export function Select() {
                       }
                     />
                   ))}
-                </View>
-                <View
-                  width={4}
-                  mx={4}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Text
-                    fontSize="lg"
-                    fontFamily="regular"
-                    color={
-                      selectedRowsLetter.some(
-                        (letter) => letter === seatsRow.rowLetter
-                      )
-                        ? 'gray.20'
-                        : 'purple.100'
-                    }
+                </Seat.Row>
+                <Seat.LetterRoot>
+                  <Seat.LetterItem
+                    isSelected={selectedRowsLetter.some(
+                      (letter) => letter === seatsRow.rowLetter
+                    )}
                   >
                     {seatsRow.rowLetter}
-                  </Text>
-                </View>
-                <View flexDir="row" mr="auto">
+                  </Seat.LetterItem>
+                </Seat.LetterRoot>
+                <Seat.Row mr="auto">
                   {seatsRow.rightSeats.map((seat, index) => (
-                    <Seat
+                    <Seat.Item
                       key={`${seatsRow.rowLetter}${seat.number}`}
                       data={seat}
                       mr={index + 1 === seatsRow.leftSeats.length ? 0 : 3}
@@ -264,8 +246,8 @@ export function Select() {
                       }
                     />
                   ))}
-                </View>
-              </View>
+                </Seat.Row>
+              </Seat.Root>
             ))}
           </View>
 
