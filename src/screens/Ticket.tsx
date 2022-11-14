@@ -9,7 +9,7 @@ import { ActionButton } from '../components/ActionButton';
 import { MovieCardProps } from '../components/MovieCard';
 import { TicketDetach } from '../components/TicketDetach';
 import { TicketInfo } from '../components/TicketInfo';
-import { getHashCodeFrom } from '../utils';
+import { generateHashCodeFrom } from '../utils';
 
 interface RouteParams {
   movieId: string;
@@ -25,7 +25,7 @@ export function Ticket() {
 
   const [movie, setMovie] = useState<MovieCardProps>({} as MovieCardProps);
   const [room] = useState(Math.ceil(Math.random() * 10));
-  const reservationCode = getHashCodeFrom(
+  const reservationCode = generateHashCodeFrom(
     String(`${movieId}${room}${date}${time}${rows}${seats}`)
   );
 
