@@ -13,6 +13,7 @@ export function AppRoutes() {
         headerShown: false,
         statusBarTranslucent: true,
         statusBarColor: 'transparent',
+        statusBarStyle: 'dark',
       }}
     >
       <Screen name="Catalog" component={Catalog} />
