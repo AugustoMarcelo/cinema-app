@@ -3,6 +3,7 @@ export declare global {
     interface RootParamList {
       Catalog: undefined;
       Select: undefined;
+      Ticket: undefined;
       MovieInfo: {
         id: string;
       };
