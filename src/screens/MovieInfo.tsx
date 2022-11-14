@@ -20,7 +20,7 @@ export function MovieInfo() {
   const { sizes } = useTheme();
   const route = useRoute();
   const { id } = route.params as RouteParams;
-  const { height, width } = Dimensions.get(`screen`);
+  const { width } = Dimensions.get(`screen`);
   const movieHours = Math.floor(movie.duration / 60);
   const movieMinutes = movie.duration % 60;
 
@@ -79,7 +79,7 @@ export function MovieInfo() {
           {movie.title}
         </Text>
         <Text
-          color="#676080"
+          color="purple.100"
           fontSize="sm"
           fontFamily="regular"
           textAlign="center"
@@ -98,7 +98,7 @@ export function MovieInfo() {
         >
           <View>
             <Text
-              color="#676080"
+              color="purple.100"
               fontSize="xs"
               fontFamily="regular"
               textAlign="center"
@@ -116,7 +116,7 @@ export function MovieInfo() {
           </View>
           <View>
             <Text
-              color="#676080"
+              color="purple.100"
               fontSize="xs"
               fontFamily="regular"
               textAlign="center"
@@ -134,7 +134,7 @@ export function MovieInfo() {
           </View>
           <View>
             <Text
-              color="#676080"
+              color="purple.100"
               fontSize="xs"
               fontFamily="regular"
               textAlign="center"

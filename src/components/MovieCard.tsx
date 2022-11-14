@@ -41,7 +41,7 @@ export function MovieCard({ data, ...rest }: Props) {
             {data.title}
           </Text>
           <Text
-            color="#676080"
+            color="purple.100"
             fontSize="sm"
             fontFamily="regular"
             textAlign="center"
