@@ -2,10 +2,37 @@ import { Image, Text, View, VStack } from 'native-base';
 import QRCode from 'react-native-qrcode-svg';
 import { Header } from '../components/Header';
 
+import { useRoute } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import { data } from '../../data.json';
 import { ActionButton } from '../components/ActionButton';
+import { MovieCardProps } from '../components/MovieCard';
+import { TicketDetach } from '../components/TicketDetach';
+import { TicketInfo } from '../components/TicketInfo';
+import { getHashCodeFrom } from '../utils';
+
+interface RouteParams {
+  movieId: string;
+  date: string;
+  time: string;
+  rows: string;
+  seats: string;
+}
 
 export function Ticket() {
+  const route = useRoute();
+  const { movieId, date, time, rows, seats } = route.params as RouteParams;
+
+  const [movie, setMovie] = useState<MovieCardProps>({} as MovieCardProps);
+  const [room] = useState(Math.ceil(Math.random() * 10));
+  const reservationCode = getHashCodeFrom(
+    String(`${movieId}${room}${date}${time}${rows}${seats}`)
+  );
+
+  useEffect(() => {
+    setMovie(data.filter((item) => String(item.id) === String(movieId))[0]);
+  }, [movieId]);
+
   return (
     <VStack flex={1} alignItems="center" bgColor="dark.800">
       <Header showBackButton title="Ticket" />
@@ -23,11 +50,11 @@ export function Ticket() {
         }}
       >
         <Image
-          source={{ uri: data[0].cover_url }}
+          source={{ uri: movie.cover_url }}
           resizeMode="cover"
           height={48}
           width={72}
-          alt={data[0].title}
+          alt={movie.title || 'Movie cover'}
         />
 
         <Text
@@ -39,7 +66,7 @@ export function Ticket() {
           textTransform="uppercase"
           textAlign="center"
         >
-          {data[0].title}
+          {movie.title}
         </Text>
 
         <Text
@@ -48,7 +75,7 @@ export function Ticket() {
           fontFamily="regular"
           textAlign="center"
         >
-          {data[0].directed_by}
+          {movie.directed_by}
         </Text>
 
         <View
@@ -58,160 +85,28 @@ export function Ticket() {
           justifyContent="space-between"
           mx={8}
         >
-          <View
-            mt={6}
-            mb={2}
-            alignSelf="stretch"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <View mb={2}>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Data
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                24 Jun
-              </Text>
-            </View>
-            <View>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Sala
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                3
-              </Text>
-            </View>
-          </View>
+          <TicketInfo.Container>
+            <TicketInfo.Block label="Data" value={date} mb={2} />
+            <TicketInfo.Block label="Sala" value={String(room)} />
+          </TicketInfo.Container>
 
-          <View
-            mt={6}
-            mb={2}
-            alignSelf="stretch"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <View mb={2}>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Horário
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                20:00
-              </Text>
-            </View>
-            <View>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Fileira
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                H
-              </Text>
-            </View>
-          </View>
+          <TicketInfo.Container>
+            <TicketInfo.Block label="Horário" value={time} />
+            <TicketInfo.Block label="Fileira" value={rows} />
+          </TicketInfo.Container>
 
-          <View
-            mt={6}
-            mb={2}
-            alignSelf="stretch"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <View mb={2}>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Visual
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                3D
-              </Text>
-            </View>
-            <View>
-              <Text
-                color="purple.100"
-                fontSize="xs"
-                fontFamily="regular"
-                textAlign="center"
-              >
-                Assento
-              </Text>
-              <Text
-                color="gray.20"
-                fontSize="sm"
-                fontFamily="heading"
-                textAlign="center"
-              >
-                6
-              </Text>
-            </View>
-          </View>
+          <TicketInfo.Container>
+            <TicketInfo.Block label="Visual" value="3D" />
+            <TicketInfo.Block label="Assento" value={seats} />
+          </TicketInfo.Container>
         </View>
 
-        <View mt={4}>
-          <Text
-            color="purple.100"
-            fontSize="xs"
-            fontFamily="regular"
-            textAlign="center"
-          >
-            Endereço
-          </Text>
-          <Text
-            color="gray.20"
-            fontSize="sm"
-            fontFamily="heading"
-            textAlign="center"
-          >
-            Av. Camilo Calazans
-          </Text>
-        </View>
+        <TicketInfo.Container mb={0} mt={4}>
+          <TicketInfo.Block
+            label="Endereço"
+            value="Av. Seridó, 659 - 3° piso"
+          />
+        </TicketInfo.Container>
 
         <View
           position="absolute"
@@ -220,25 +115,12 @@ export function Ticket() {
           flexDir="row"
           alignItems="center"
         >
-          <View height={7} width={7} bgColor="dark.800" mr={2} rounded="full" />
-
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-          <View height={2} width={2} bgColor="dark.800" mr={2} rounded="full" />
-
-          <View height={7} width={7} bgColor="dark.800" rounded="full" />
+          {Array.from({ length: 17 }).map((_, index, thisArray) => {
+            if (index === 0) return <TicketDetach key={index} size="large" />;
+            if (index === thisArray.length - 1)
+              return <TicketDetach key={index} size="large" mr={0} />;
+            return <TicketDetach key={index} size="small" />;
+          })}
         </View>
 
         <View
@@ -264,7 +146,7 @@ export function Ticket() {
               fontFamily="regular"
               textAlign="center"
             >
-              166973
+              {reservationCode}
             </Text>
           </View>
 
@@ -275,7 +157,11 @@ export function Ticket() {
             justifyContent="center"
             bgColor="gray.200"
           >
-            <QRCode value="166973" size={64} backgroundColor="transparent" />
+            <QRCode
+              value={String(reservationCode)}
+              size={64}
+              backgroundColor="transparent"
+            />
           </View>
         </View>
       </View>
@@ -283,7 +169,7 @@ export function Ticket() {
       <View
         alignSelf="stretch"
         flexDir="row"
-        mt={8}
+        mt={6}
         mx={10}
         alignItems="center"
         justifyContent="space-between"

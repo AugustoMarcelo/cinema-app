@@ -1,12 +1,12 @@
 import { FlatList, Pressable, Text, View, VStack } from 'native-base';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Button } from '../components/Button';
 import { Header } from '../components/Header';
 
 import Ellipsis4 from '../assets/ellipsis4.svg';
 // import Light from '../assets/light.svg';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Screen1 from '../assets/screen1.svg';
 import Screen2 from '../assets/screen2.svg';
 import { Seat } from '../components/Seat';
@@ -25,8 +25,14 @@ interface SelectedSeat {
   number: number;
 }
 
+interface RouteParams {
+  movieId: string;
+}
+
 export function Select() {
   const { navigate } = useNavigation();
+  const route = useRoute();
+  const { movieId } = route.params as RouteParams;
 
   const [dates, setDates] = useState<SelectDate[]>(getInitializedDatesData());
   const [times, setTimes] = useState<SelectTime[]>(getInitializedTimesData());
@@ -128,6 +134,21 @@ export function Select() {
 
     setSelectedRowsLetter(Array.from(lettersSet));
   }
+
+  const seats = useMemo(() => {
+    const selectedSeats = [];
+
+    seatsRows.forEach((seatsRow) => {
+      seatsRow.leftSeats.forEach((seat) => {
+        if (seat.status === 'selected') selectedSeats.push(seat.number);
+      });
+      seatsRow.rightSeats.forEach((seat) => {
+        if (seat.status === 'selected') selectedSeats.push(seat.number);
+      });
+    });
+
+    return selectedSeats.join(',');
+  }, [seatsRows]);
 
   return (
     <VStack flex={1} alignItems="center" bgColor="dark.800">
@@ -303,7 +324,17 @@ export function Select() {
           <Subtitle />
         </View>
 
-        <Button handleClick={() => navigate('Ticket')} />
+        <Button
+          handleClick={() =>
+            navigate('Ticket', {
+              movieId,
+              date: dates.filter((item) => item.isSelected)[0].dayMonth,
+              time: times.filter((item) => item.isSelected)[0].time,
+              rows: selectedRowsLetter.join(','),
+              seats,
+            })
+          }
+        />
       </View>
     </VStack>
   );

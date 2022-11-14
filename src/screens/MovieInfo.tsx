@@ -164,7 +164,7 @@ export function MovieInfo() {
           {movie.overview}
         </Text>
       </View>
-      <Button mb={6} handleClick={() => navigate('Select')} />
+      <Button mb={6} handleClick={() => navigate('Select', { movieId: id })} />
     </VStack>
   );
 }
