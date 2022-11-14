@@ -152,7 +152,10 @@ export const getInitializedTimesData = (): SelectTime[] => {
       isSelected = true;
 
     return {
-      time: `${String(currentAvailableHourIncremented).padStart(2, '0')}:00`,
+      time: `${String(currentAvailableHourIncremented).padStart(
+        2,
+        '0'
+      )}:00`.replace('24:', '00:'),
       isSelected,
     };
   });
