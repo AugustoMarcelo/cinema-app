@@ -1,11 +1,14 @@
-import { Image, Text, View, VStack } from 'native-base';
-import QRCode from 'react-native-qrcode-svg';
-import { Header } from '../components/Header';
-
 import { useRoute } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import * as Share from 'expo-sharing';
+import { Image, Text, useToast, View, VStack } from 'native-base';
+import { useEffect, useRef, useState } from 'react';
+import QRCode from 'react-native-qrcode-svg';
+import { captureRef, captureScreen } from 'react-native-view-shot';
+
 import { data } from '../../data.json';
+
 import { ActionButton } from '../components/ActionButton';
+import { Header } from '../components/Header';
 import { MovieCardProps } from '../components/MovieCard';
 import { TicketDetach } from '../components/TicketDetach';
 import { TicketInfo } from '../components/TicketInfo';
@@ -20,6 +23,8 @@ interface RouteParams {
 }
 
 export function Ticket() {
+  const screenshotAreaRef = useRef(null);
+  const toast = useToast();
   const route = useRoute();
   const { movieId, date, time, rows, seats } = route.params as RouteParams;
 
@@ -33,11 +38,31 @@ export function Ticket() {
     setMovie(data.filter((item) => String(item.id) === String(movieId))[0]);
   }, [movieId]);
 
+  async function shareScreenshot() {
+    const screenshot = await captureRef(screenshotAreaRef);
+
+    await Share.shareAsync(`file://${screenshot}`);
+  }
+
+  async function saveScreenshot() {
+    const uri = await captureScreen({ format: 'jpg' });
+
+    if (uri) {
+      toast.show({
+        title: 'Ticket salvo em: ',
+        description: uri,
+        bgColor: 'green.500',
+        placement: 'top',
+      });
+    }
+  }
+
   return (
     <VStack flex={1} alignItems="center" bgColor="dark.800">
       <Header showBackButton title="Ticket" />
 
       <View
+        ref={screenshotAreaRef}
         position="relative"
         alignItems="center"
         rounded="2xl"
@@ -60,6 +85,7 @@ export function Ticket() {
         <Text
           mt={1}
           mb={2}
+          mx={8}
           color="gray.20"
           fontSize="sm"
           fontFamily="heading"
@@ -175,8 +201,8 @@ export function Ticket() {
         justifyContent="space-between"
       >
         <ActionButton iconName="trash" />
-        <ActionButton iconName="download" />
-        <ActionButton iconName="share-2" />
+        <ActionButton iconName="download" onPress={saveScreenshot} />
+        <ActionButton iconName="share-2" onPress={shareScreenshot} />
       </View>
     </VStack>
   );

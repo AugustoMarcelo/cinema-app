@@ -2,20 +2,18 @@ import { Feather } from '@expo/vector-icons';
 import {
   Button as NativeBaseButton,
   Icon,
-  StyledProps,
-  View,
+  IPressableProps,
+  Pressable,
 } from 'native-base';
-import { GestureResponderEvent } from 'react-native';
 import InsetShadow from 'react-native-inset-shadow';
 
-interface Props extends StyledProps {
+interface Props extends IPressableProps {
   iconName: any;
-  handleClick?: (event: GestureResponderEvent) => void;
 }
 
-export function ActionButton({ handleClick, iconName, ...rest }: Props) {
+export function ActionButton({ iconName, ...rest }: Props) {
   return (
-    <View
+    <Pressable
       rounded="full"
       height={10}
       width={10}
@@ -53,9 +51,9 @@ export function ActionButton({ handleClick, iconName, ...rest }: Props) {
             },
             shadowOpacity: 1,
           }}
-          onPress={handleClick}
+          onPress={rest.onPress}
         />
       </InsetShadow>
-    </View>
+    </Pressable>
   );
 }
