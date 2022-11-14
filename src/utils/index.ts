@@ -139,14 +139,15 @@ export const getInitializedDatesData = (): SelectDate[] => {
 
 export const getInitializedTimesData = (): SelectTime[] => {
   return Array.from({ length: 24 - new Date().getHours() }).map((_, index) => {
-    const currentHour = new Date().getHours();
-    const currentHourIncremented = currentHour + index;
+    const currentAvailableHour = new Date().getHours() + 1;
+    const currentAvailableHourIncremented = currentAvailableHour + index;
     let isSelected = false;
 
-    if (currentHour === currentHourIncremented) isSelected = true;
+    if (currentAvailableHour === currentAvailableHourIncremented)
+      isSelected = true;
 
     return {
-      time: `${String(currentHourIncremented).padStart(2, '0')}:00`,
+      time: `${String(currentAvailableHourIncremented).padStart(2, '0')}:00`,
       isSelected,
     };
   });
