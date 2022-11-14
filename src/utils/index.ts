@@ -11,6 +11,7 @@ export interface SeatsRow {
 
 export interface SelectDate {
   day: string;
+  dayMonth: string;
   shortDay: string;
   isSelected: boolean;
 }
@@ -132,6 +133,7 @@ export const getInitializedDatesData = (): SelectDate[] => {
     return {
       day: String(date.getDate()).padStart(2, '0'),
       shortDay: dayjs(date).locale(ptBR).format('ddd'),
+      dayMonth: dayjs(date).locale(ptBR).format('DD MMM'),
       isSelected,
     };
   });
@@ -151,4 +153,19 @@ export const getInitializedTimesData = (): SelectTime[] => {
       isSelected,
     };
   });
+};
+
+export const getHashCodeFrom = (value: string): number => {
+  const sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+  let hash = 0;
+  let chr: number;
+
+  if (sanitizedValue.length === 0) return hash;
+
+  for (let i = 0; i < sanitizedValue.length; i++) {
+    chr = sanitizedValue.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 16bit integer
+  }
+  return hash;
 };
