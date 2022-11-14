@@ -6,6 +6,7 @@ import { Header } from '../components/Header';
 
 import Ellipsis4 from '../assets/ellipsis4.svg';
 // import Light from '../assets/light.svg';
+import { useNavigation } from '@react-navigation/native';
 import Screen1 from '../assets/screen1.svg';
 import Screen2 from '../assets/screen2.svg';
 import { Seat } from '../components/Seat';
@@ -25,6 +26,8 @@ interface SelectedSeat {
 }
 
 export function Select() {
+  const { navigate } = useNavigation();
+
   const [dates, setDates] = useState<SelectDate[]>(getInitializedDatesData());
   const [times, setTimes] = useState<SelectTime[]>(getInitializedTimesData());
   const [seatsRows, setSeatsRows] = useState<SeatsRow[]>(
@@ -300,7 +303,7 @@ export function Select() {
           <Subtitle />
         </View>
 
-        <Button />
+        <Button handleClick={() => navigate('Ticket')} />
       </View>
     </VStack>
   );
